@@ -12,15 +12,19 @@ app = Dash(__name__)
 app.layout = html.Div([
     html.H1("Supermarket Sales Dashboard", style={'textAlign': 'center'}),
     html.Label("Select City:"),
-    dcc.Dropdown(id='city-dropdown',
+    dcc.Dropdown(
+        id='city-dropdown',
         options=[{'label': 'All', 'value': 'All'}] +
                 [{'label': c, 'value': c} for c in df['City'].unique()],
-        value='All'),
+        value='All'
+    ),
     html.Label("Select Payment Method:"),
-    dcc.Dropdown(id='payment-dropdown',
+    dcc.Dropdown(
+        id='payment-dropdown',
         options=[{'label': 'All', 'value': 'All'}] +
                 [{'label': p, 'value': p} for p in df['Payment'].unique()],
-        value='All'),
+        value='All'
+    ),
     dcc.Graph(id='line-chart'),
     dcc.Graph(id='bar-chart')
 ])
@@ -37,19 +41,18 @@ def update_graphs(city, payment):
         filtered = filtered[filtered['City'] == city]
     if payment != 'All':
         filtered = filtered[filtered['Payment'] == payment]
-        
-# ── Line Chart 
+
     daily = filtered.groupby('Date')['Sales'].sum().reset_index()
     line_fig = px.line(daily, x='Date', y='Sales',
                        title='Daily Sales Trend', markers=True)
-    
-# ── Bar Chart
+
     product = filtered.groupby('Product line')['Sales'].sum().reset_index()
     bar_fig = px.bar(product, x='Product line', y='Sales',
                      title='Sales by Product Line', color='Product line')
-    server= app.server
 
     return line_fig, bar_fig
+
 server = app.server
+
 if __name__ == '__main__':
     app.run(debug=True)
