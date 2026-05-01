@@ -50,6 +50,6 @@ def update_graphs(city, payment):
     server= app.server
 
     return line_fig, bar_fig
-
+server = app.server
 if __name__ == '__main__':
     app.run(debug=True)
